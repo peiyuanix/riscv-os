@@ -1,5 +1,5 @@
-BUILD_DIR="build"
+source config.sh
 
 qemu-system-riscv64 -M virt -m 2G \
     -display none -serial stdio \
-    -kernel ${BUILD_DIR}/linux-5.12/arch/riscv/boot/Image
+    -kernel ${BUILD_DIR}/linux-${KERNEL_VERSION}/arch/riscv/boot/Image
