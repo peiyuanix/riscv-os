@@ -11,4 +11,4 @@ cd linux-${KERNEL_VERSION}
 export ARCH=riscv
 export CROSS_COMPILE=riscv64-linux-gnu-
 make defconfig
-make -j 8
+make -j $(nproc)

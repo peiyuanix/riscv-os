@@ -11,7 +11,7 @@ cd busybox-${BUSYBOX_VERSION}
 export CROSS_COMPILE=riscv64-linux-gnu-
 make defconfig
 sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i .config
-make -j 8
+make -j $(nproc)
 
 # initrd
 mkdir -p initrd

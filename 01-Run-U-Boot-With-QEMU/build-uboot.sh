@@ -11,4 +11,4 @@ tar -xf u-boot-${UBOOT_VERSION}.tar.gz
 cd u-boot-${UBOOT_VERSION}
 export CROSS_COMPILE=riscv64-linux-gnu-
 make qemu-riscv64_smode_defconfig
-make -j 8
+make -j $(nproc)
