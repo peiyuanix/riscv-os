@@ -1,4 +1,4 @@
-# Day0: Run Linux Kernel With QEMU RISC-V
+# 00: Run Linux Kernel With QEMU RISC-V
 
 ## Build Linux Kernel
 Download and build Linux kernel with [build-kernel.sh](build-kernel.sh)  
