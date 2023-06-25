@@ -17,4 +17,14 @@ bash run-uboot.sh
 
 Then you can see U-Boot boots.
 
-**NOTICE**: The output of U-Boot `u-boot.bin` is a flat binary.
+**NOTE**: `-kernel` parameter of QEMU accepts both flat binary and elf file.  
+- `u-boot.bin`: flat binary  
+  ```
+  $ file build/u-boot-2021.04/u-boot.bin 
+  build/u-boot-2021.04/u-boot.bin: data
+  ```
+- `u-boot`: ELF   
+  ```
+  $ file build/u-boot-2021.04/u-boot
+  build/u-boot-2021.04/u-boot: ELF 64-bit LSB executable, UCB RISC-V, version 1 (SYSV), dynamically linked, with debug_info, not stripped
+  ```
