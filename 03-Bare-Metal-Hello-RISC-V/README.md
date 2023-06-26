@@ -33,6 +33,9 @@
 - [QEMU Manual - Boot Image or Kernel specific](https://www.qemu.org/docs/master/system/invocation.html#hxtool-8)
 - [QEMU Manual - RISC-V CPU firmware](https://www.qemu.org/docs/master/system/target-riscv.html#risc-v-cpu-firmware)
 - [QEMU Manual - RISC-V Generic Virtual Platform](https://www.qemu.org/docs/master/system/riscv/virt.html)
+- [QEMU RISC-V virt Machine Source Code](https://github.com/qemu/qemu/blob/master/hw/riscv/virt.c)
+- [QEMU RISC-V Boot Helper Source Code](https://github.com/qemu/qemu/blob/master/hw/riscv/boot.c)
+- [OpenSBI Platform Firmwares](https://github.com/riscv-software-src/opensbi/blob/master/docs/firmware/fw.md)
 - [The GNU assembler](https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_node/as_toc.html#TOC3)
 - [The GNU Linker - Command Language](https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html#SEC5)
 - [objcopy - copy and translate object files](https://ftp.gnu.org/old-gnu/Manuals/binutils-2.12/html_node/binutils_5.html)
@@ -41,3 +44,4 @@
 - [PC16550D Universal Asynchronous Receiver/Transmitter With FIFOs
 ](https://media.digikey.com/pdf/Data%20Sheets/Texas%20Instruments%20PDFs/PC16550D.pdf)
 - [RISC-V from scratch 2: Hardware layouts, linker scripts, and C runtimes](https://twilco.github.io/riscv-from-scratch/2019/04/27/riscv-from-scratch-2.html)
+- [QEMU RISC-V virt 平台分析](https://juejin.cn/post/6891922292075397127)
