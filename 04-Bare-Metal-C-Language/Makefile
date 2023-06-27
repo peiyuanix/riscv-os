@@ -11,7 +11,7 @@ bin/firmware.bin: clang_env_init.s firmware.c clang_env_init.ld
 	${OBJCOPY} -O binary -S bin/firmware bin/firmware.bin
 
 run: bin/firmware.bin
-	qemu-system-riscv64 -display none -machine virt -serial stdio -bios bin/firmware
+	qemu-system-riscv64 -display none -machine virt -serial stdio -bios bin/firmware.bin
 
 clean:
 	rm -rf bin/
