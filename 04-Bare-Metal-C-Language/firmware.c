@@ -22,6 +22,8 @@ typedef long u64;
 #define PLATFORM_UART_INPUT_FREQ 10000000
 #define PLATFORM_UART_BAUDRATE 115200
 
+static u8 *uart_base_addr = (u8 *)UART_BASE;
+
 static inline void writeb(u8 val, volatile void *addr)
 {
 	asm volatile("sb %0, 0(%1)" : : "r"(val), "r"(addr));
@@ -36,13 +38,11 @@ static inline u8 readb(const volatile void *addr)
 
 static void set_reg(u32 offset, u32 val)
 {
-  u8 *uart_base_addr = (u8 *)UART_BASE;
 	writeb(val, uart_base_addr + offset);
 }
 
 static u32 get_reg(u32 offset)
 {
-  u8 *uart_base_addr = (u8 *)UART_BASE;
 	return readb(uart_base_addr + offset);
 }
 
@@ -83,7 +83,7 @@ int _uart_init() {
 	get_reg(UART_RBR_OFFSET);
 	/* Set scratchpad */
 	set_reg(UART_SCR_OFFSET, 0x00);
-  char str[] = "Hello";
+  char *str = "Hello, RISC-V!\n";
   uart_print(str);
 
   while (1) {}
