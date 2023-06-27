@@ -10,12 +10,13 @@
 
 ### Tutorials
 
-- [00: Run Linux with QEMU](00-Run-Linux-With-QEMU)  
-- [01: Run U-Boot with QEMU](01-Run-U-Boot-With-QEMU)  
-- [02: Run OpenSBI with QEMU](02-Run-OpenSBI-With-QEMU)  
+- [00: Run Linux with QEMU](/00-Run-Linux-With-QEMU)  
+- [01: Run U-Boot with QEMU](/01-Run-U-Boot-With-QEMU)  
+- [02: Run OpenSBI with QEMU](/02-Run-OpenSBI-With-QEMU)  
 
 ## Part 2. Bare Metal RISC-V
 
 ### Tutorials
 
-- [03: Bare Metal Hello RISC-V](03-Bare-Metal-Hello-RISC-V)  
+- [03: Bare Metal Hello RISC-V](/03-Bare-Metal-Hello-RISC-V)  
+- [04: Bare Metal Hello RISC-V (C Language Version)](/04-Bare-Metal-C-Language)

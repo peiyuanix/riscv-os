@@ -47,7 +47,7 @@ Real-world RISC-V boot flow may be more diverse, refer to [An Introduction to RI
 
 ## QEMU RISC-V *virt* Machine Memory Map
 
-By QEMU [source code](https://github.com/qemu/qemu/blob/v8.0.2/hw/riscv/virt.c#L77), the memory map of *virt* is as follows:  
+According to QEMU [source code](https://github.com/qemu/qemu/blob/v8.0.2/hw/riscv/virt.c#L77), the memory map of *virt* is as follows:  
 
 ```
 static const MemMapEntry virt_memmap[] = {
@@ -61,7 +61,7 @@ static const MemMapEntry virt_memmap[] = {
 ```
 The point is: the UART device registers is mapped to `0x10000000`, we can operate UART by write/read uart registers.  
 
-By [QEMU Manual - RISC-V Generic Virtual Platform](https://www.qemu.org/docs/master/system/riscv/virt.html), the UART device is a *NS16550 compatible UART*.  
+By reading [QEMU Manual - RISC-V Generic Virtual Platform](https://www.qemu.org/docs/master/system/riscv/virt.html), we can know that the UART device is a *NS16550 compatible UART*.  
 
 However, I don't know how to configure the UART yet after reading datasheet [PC16550D Universal Asynchronous Receiver/Transmitter With FIFOs
 ](https://media.digikey.com/pdf/Data%20Sheets/Texas%20Instruments%20PDFs/PC16550D.pdf).  
@@ -269,7 +269,9 @@ Then we can see `Hello, RISC-V!` being printed on the console!
 
 ### Rewrite with C language
 - Configure stack at the beginning so that C code can run
-- Rewrite UART initialization code and printing code with C landuage
+- Rewrite UART initialization code and printing code with C language
+
+**Done:** [04: Bare Metal Hello RISC-V (C Language Version)](/04-Bare-Metal-C-Language)
 
 ### Respect OpenSBI: load our program as `-kernel`
 OpenSBI is responsible for initializing a number of devices, including the UART.  
