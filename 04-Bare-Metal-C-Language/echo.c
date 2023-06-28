@@ -1,29 +1,3 @@
-# 04: Bare Metal Hello RISC-V - C Language Version
-
-## Background
-
-### TODO
-
-### RISC-V Calling Convention
-
-### C Program Memory Layout
-
-## Hello, RISC-V!
-
-### Step.1 Setup Stack Pointer for C Program
-
-```asm
-.global _clang_env_init
-
-.text
-_clang_env_init:
-li sp, 0x80001000
-j _uart_init
-```
-
-### Step.2 Write UART initialization code with **C Language**
-
-```c
 typedef char u8;
 typedef short u16;
 typedef int u32;
@@ -44,6 +18,16 @@ typedef long u64;
 #define UART_MSR_OFFSET		6	/* In:  Modem Status Register */
 #define UART_SCR_OFFSET		7	/* I/O: Scratch Register */
 #define UART_MDR1_OFFSET	8	/* I/O:  Mode Register */
+
+#define UART_LSR_FIFOE		0x80	/* Fifo error */
+#define UART_LSR_TEMT		0x40	/* Transmitter empty */
+#define UART_LSR_THRE		0x20	/* Transmit-hold-register empty */
+#define UART_LSR_BI		0x10	/* Break interrupt indicator */
+#define UART_LSR_FE		0x08	/* Frame error indicator */
+#define UART_LSR_PE		0x04	/* Parity error indicator */
+#define UART_LSR_OE		0x02	/* Overrun error indicator */
+#define UART_LSR_DR		0x01	/* Receiver data ready */
+#define UART_LSR_BRK_ERROR_BITS	0x1E	/* BI, FE, PE, OE bits */
 
 #define PLATFORM_UART_INPUT_FREQ 10000000
 #define PLATFORM_UART_BAUDRATE 115200
@@ -70,6 +54,18 @@ static void set_reg(u32 offset, u32 val)
 static u32 get_reg(u32 offset)
 {
 	return readb(uart_base_addr + offset);
+}
+
+static int writable() {
+	return (get_reg(UART_LSR_OFFSET) & UART_LSR_THRE) == 0;
+}
+
+static int readble() {
+	return get_reg(UART_LSR_OFFSET) & UART_LSR_DR;
+}
+
+static int uart_getc() {
+  return get_reg(UART_RBR_OFFSET);
 }
 
 static void uart_putc(u8 ch) {
@@ -109,56 +105,14 @@ int _uart_init() {
 	get_reg(UART_RBR_OFFSET);
 	/* Set scratchpad */
 	set_reg(UART_SCR_OFFSET, 0x00);
-  char *str = "Hello, RISC-V!\n";
-  uart_print(str);
 
-  while (1) {}
-}
-```
+  uart_print("Hello, RISC-V!\n");
+  uart_print("echo > ");
 
-### Step.3 Build and Run
-
-**IMPORTANT: Set Proper Location Counter in Linker Script!!!**
-
-```
-make run
-```
-
-## Read from console: echo
-
-We can also read from console/uart, then print what user enters.  
-
-The complete code is in [echo.c](echo.c). Run with `make echo`.  
-
-```c
-/* ... */
-static int readble() {
-	return get_reg(UART_LSR_OFFSET) & UART_LSR_DR;
-}
-
-/* ... */
-
-uart_print("Hello, RISC-V!\n");
-uart_print("echo > ");
-
-int _uart_init() {
-	/* ... */
-	while (1) {
+  while (1) {
 		if (readble()) {
 			int ch = uart_getc();
 			uart_putc(ch);
 		}
 	}
-	/* ... */
 }
-
-/* ... */
-```
-
-## References
-
-### Calling Convention
-
-- [RISC-V Toolchain Conventions](https://github.com/riscv-non-isa/riscv-toolchain-conventions)
-- [RISC-V ELF psABI Document](https://github.com/riscv-non-isa/riscv-elf-psabi-doc)
-- [RISC-V Assembly Programmer's Manual](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md)
