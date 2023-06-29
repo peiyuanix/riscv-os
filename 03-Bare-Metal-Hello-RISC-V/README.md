@@ -119,6 +119,8 @@ int uart8250_init(unsigned long base, u32 in_freq, u32 baudrate, u32 reg_shift,
 
 We can write our own UART initialization code according that.  
 
+__UPDATE: The initialization is unnecessary for a minimal *Hello, RISC-V* program! We can write to uart directly. The initialization may be necessary for real-world hardware. The minimal code is [firmware_minimal.s](firmware_minimal.s)__
+
 ## Hello, RISC-V!
 
 ### Write UART initialization code
