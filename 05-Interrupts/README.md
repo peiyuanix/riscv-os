@@ -7,7 +7,11 @@ Refer to:
 - [SiFive - HiFive Unleashed](https://www.sifive.com/boards/hifive-unleashed)
 - [SiFive FU540-C000 Manual v1p4](https://sifive.cdn.prismic.io/sifive/d3ed5cd0-6e74-46b2-a12d-72b06706513e_fu540-c000-manual-v1p4.pdf)
 
+**Attention: _sifive_u_ has multiple cores!** When I first wrote `Hello, RISC-V!` for _sifive_u_, I ignored its multi-core nature, resulting in duplicate and interleaved output.  
+
 ## Echo
+
+****
 
 ## References
 
