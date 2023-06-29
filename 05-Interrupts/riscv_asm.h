@@ -19,6 +19,15 @@ static inline u32 read4b(const volatile void *addr)
   return val;
 }
 
+static inline u64 read8b(const volatile void *addr)
+{
+  u64 val;
+  asm volatile("ld %0, 0(%1)"
+               : "=r"(val)
+               : "r"(addr));
+  return val;
+}
+
 static inline void csrw_mtvec(const volatile u64 val)
 {
   asm volatile("csrw mtvec, %0"

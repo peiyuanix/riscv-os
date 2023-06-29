@@ -57,6 +57,14 @@ static inline void uart_print(char *str)
   }
 }
 
+static inline void uart_print_int(u64 val)
+{
+  for (int i = 63; i >= 0; i--)
+  {
+    uart_putc(((val >> i) & 0x1) + '0');
+  }
+}
+
 static inline void uart_init()
 {
   /* Configure baudrate */
