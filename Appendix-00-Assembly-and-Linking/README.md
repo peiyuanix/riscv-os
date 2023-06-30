@@ -1,11 +1,11 @@
-# Compilation and Linking Basics
+# Assembly and Linking Basics
 ## Related file types and concepts  
 - machine instruction  
 - assembly source code file  
 - relocatable file
 - executable file
 
-## Compilation and linking workflow  
+## Assembly and linking workflow  
 - The CPU can only decode and execute _machine instructions_.  
 - An _assembly source code file_ consists of assembly instructions, which are symbolic representations of machine instructions.  
 - The assembler can translate an _assembly source file_ into a _relocatable file_.  
