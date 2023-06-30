@@ -12,7 +12,7 @@ bin/firmware.bin: clang_env_init.s firmware.c trap.s riscv_asm.h riscv_types.h u
 	${OBJCOPY} -O binary -S bin/firmware bin/firmware.bin
 
 run: bin/firmware.bin
-	qemu-system-riscv64 -display none -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s
+	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -display none
 
 debug: bin/firmware.bin
 	qemu-system-riscv64 -machine sifive_u -serial stdio -bios bin/firmware.bin -s -S -display none

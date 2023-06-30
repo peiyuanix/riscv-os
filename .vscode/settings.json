@@ -1,0 +1,5 @@
+{
+  "files.associations": {
+    "riscv_asm.h": "c"
+  }
+}

@@ -3,6 +3,7 @@
 
 #include "riscv_types.h"
 #include "riscv_asm.h"
+#include <stdarg.h>
 
 #define UART_BASE 0x10010000
 
@@ -29,12 +30,12 @@ static u8 *uart_base_addr = (u8 *)UART_BASE;
 
 static inline void set_reg(u32 offset, u32 val)
 {
-  write4b(val, uart_base_addr + offset);
+  writeu32(uart_base_addr + offset, val);
 }
 
 static inline u32 get_reg(u32 offset)
 {
-  return read4b(uart_base_addr + offset);
+  return readu32(uart_base_addr + offset);
 }
 
 static inline void uart_putc(u32 ch)
@@ -57,12 +58,90 @@ static inline void uart_print(char *str)
   }
 }
 
-static inline void uart_print_int(u64 val)
+static inline void uart_print_int(u64 val, int base)
 {
-  for (int i = 63; i >= 0; i--)
+  if (base < 2 || base > 16)
   {
-    uart_putc(((val >> i) & 0x1) + '0');
+    return;
   }
+
+  char digits[] = "0123456789ABCDEF";
+  u64 quotient = val;
+  u64 remainder;
+
+  if (val == 0)
+  {
+    uart_putc('0');
+    return;
+  }
+
+  char buffer[64];
+  int index = 0;
+
+  while (quotient > 0)
+  {
+    remainder = quotient % base;
+    buffer[index++] = digits[remainder];
+    quotient = quotient / base;
+  }
+
+  for (int i = index - 1; i >= 0; i--)
+  {
+    uart_putc(buffer[i]);
+  }
+}
+
+void uart_printf(const char *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+
+  while (*format)
+  {
+    if (*format == '%')
+    {
+      format++;
+      switch (*format)
+      {
+      case 'c':
+      {
+        char c = va_arg(args, int);
+        uart_putc(c);
+        break;
+      }
+      case 's':
+      {
+        char *str = va_arg(args, char *);
+        uart_print(str);
+        break;
+      }
+      case 'd':
+      {
+        int val = va_arg(args, int);
+        uart_print_int(val, 10);
+        break;
+      }
+      case 'x':
+      {
+        int val = va_arg(args, int);
+        uart_print_int(val, 16);
+        break;
+      }
+        // 添加其他格式化标识符的处理逻辑（例如：%f、%x等）
+
+      default:
+        uart_putc(*format);
+        break;
+      }
+    }
+    else
+    {
+      uart_putc(*format);
+    }
+    format++;
+  }
+
+  va_end(args);
 }
 
 static inline void uart_init()

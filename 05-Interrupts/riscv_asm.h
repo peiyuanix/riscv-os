@@ -3,30 +3,15 @@
 
 #include "riscv_types.h"
 
-static inline void write4b(u32 val, volatile void *addr)
-{
-  asm volatile("sw %0, 0(%1)"
-               :
-               : "r"(val), "r"(addr));
-}
+#define readu8(addr) (*(const u8 *)(addr))
+#define readu16(addr) (*(const u16 *)(addr))
+#define readu32(addr) (*(const u32 *)(addr))
+#define readu64(addr) (*(const u64 *)(addr))
 
-static inline u32 read4b(const volatile void *addr)
-{
-  u32 val;
-  asm volatile("lw %0, 0(%1)"
-               : "=r"(val)
-               : "r"(addr));
-  return val;
-}
-
-static inline u64 read8b(const volatile void *addr)
-{
-  u64 val;
-  asm volatile("ld %0, 0(%1)"
-               : "=r"(val)
-               : "r"(addr));
-  return val;
-}
+#define writeu8(addr, val) (*(u8 *)(addr) = (val))
+#define writeu16(addr, val) (*(u16 *)(addr) = (val))
+#define writeu32(addr, val) (*(u32 *)(addr) = (val))
+#define writeu64(addr, val) (*(u64 *)(addr) = (val))
 
 static inline void csrw_mtvec(const volatile u64 val)
 {

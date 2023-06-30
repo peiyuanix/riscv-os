@@ -29,13 +29,17 @@ void firmware_main()
   uart_init();
   // ecall();
   // echo();
+  u64 prev_mtime;
+  u64 curr_mtime;
   while (1)
   {
-    for (u32 i = 0; i < 10000000; i++)
+    for (u32 i = 0; i < 300000000; i++)
     {
     }
-    uart_print_int(mtime());
-    uart_print("\n");
+    curr_mtime = mtime();
+    uart_printf("Current Ticks: %d, Ticks Delta: %d\n", curr_mtime, curr_mtime - prev_mtime);
+    prev_mtime = curr_mtime;
+    set_timeout(10000000);
   }
-  
+
 }
