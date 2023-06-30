@@ -1,6 +1,6 @@
 # 03: Bare Metal Hello RISC-V
 
-## Background
+## QEMU RISC-V virt Machine Boot Flow
 
 ### How does `qemu-system-riscv64 -machine virt` boot?
 
@@ -121,6 +121,10 @@ We can write our own UART initialization code according that.
 
 __UPDATE: The initialization is unnecessary for a minimal *Hello, RISC-V* program! We can write to uart directly. The initialization may be necessary for real-world hardware. The minimal code is [firmware_minimal.s](firmware_minimal.s)__
 
+## Compilation and Linking Basics
+
+If you are not familiar with compilation and linking, refer to this concise introduction: [Compilation and Linking Basics](NOTES.md).  
+
 ## Hello, RISC-V!
 
 ### Write UART initialization code
@@ -130,6 +134,8 @@ __UPDATE: The initialization is unnecessary for a minimal *Hello, RISC-V* progra
 - how C code depends on the stack
 - how C code passes and returns parameters
 - and so on
+
+Firmware code: *firmware.s*  
 
 ```asm
 .section .text
@@ -238,28 +244,43 @@ loop:
 
 ```
 
-### Assemble and extract flat binary
+### Assemble, link and extract flat binary
 
-To make it simple, we don't care the details of ELF file and how QEMU loads ELF file. We just extract the flat binary from ELF file and let QEMU loads the flat binary file.  
+To make it simple, we don't care the details of ELF file and how QEMU loads ELF file. We just extract the flat binary from ELF executable file and let QEMU loads the flat binary file.  
 
 A flat binary file is just some machine instructions. The cpu knows how to interpret the instructions and execute them.  
 
-#### Assemble assembly source code to ELF file
+#### Assemble assembly source code to relocatable ELF file  
 
 ```
 riscv64-linux-gnu-as firmware.s -o bin/firmware.o
 ```
 
-#### Extract flat binary from the ELF file
+#### Link the relocatable ELF file to a executable file  
+
+*Linker Script: `firmware.ld`*
+```
+ENTRY(_uart_init) /* entry point */
+
+. = 0x80000000; /* load address */
+
+MEMORY {} /* default */
+SECTIONS {} /* default */
+```
+
+Link with:  
 
 ```
-riscv64-linux-gnu-objcopy -O binary -S bin/firmware.o bin/firmware.bin
+riscv64-linux-gnu-ld -T firmware.ld  bin/firmware.o -o bin/firmware
 ```
 
-**This differs slightly from what Makefile does, but it still works!**  
+#### Extract flat binary from the executable file  
 
+```
+riscv64-linux-gnu-objcopy -O binary -S bin/firmware bin/firmware.bin
+```
 
-### Boot QEMU and load our own firmware as bios!
+### Boot QEMU and load our own firmware as bios!  
 
 ```
 qemu-system-riscv64 -display none -machine virt -serial stdio -bios bin/firmware.bin
@@ -311,7 +332,9 @@ For *qemu-system-riscv64 -machine virt:*
 - [PC16550D Universal Asynchronous Receiver/Transmitter With FIFOs
 ](https://media.digikey.com/pdf/Data%20Sheets/Texas%20Instruments%20PDFs/PC16550D.pdf)
 
-### Releated Toolchains
+### About ELF/Relocation/Linking/Toolchains
+- [Compilation and Linking Basics](NOTES.md)
+- [Executable and Linkable Format (ELF)](http://www.skyfree.org/linux/references/ELF_Format.pdf)
 - [as - The GNU assembler](https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_node/as_toc.html)
 - [ld - The GNU Linker: Command Language](https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html#SEC5)
 - [objcopy - copy and translate object files](https://ftp.gnu.org/old-gnu/Manuals/binutils-2.12/html_node/binutils_5.html)

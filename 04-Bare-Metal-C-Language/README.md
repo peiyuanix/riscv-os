@@ -2,23 +2,37 @@
 
 ## Background
 
-### TODO
+### C Program and Stack
+The most important thing we need to know is that **C programs rely _Stack_ to run**.  
 
-### RISC-V Calling Convention
+- For RISC-V, the stack pointer register is `gp` or `x3`. 
+- When a C function is called, it allocates memory for its running by **decreasing** `gp`.  
 
-### C Program Memory Layout
+The default `gp` at startup is `0x0`, and the memory space below `0x0` is of course illegal.  
+
+Therefore, we must set a reasonable value for `gp`, so that we can jump from our startup code written in assembly to a C function.  
+
+### C Program/RISC-V Calling Convention
+
+Setuping stack pointer is enough for jumping from our assembly startup code to a C function.  
+However, to call an assembly code snippet from a C function and return it, we need to learn how a C function passes parameters and receives a return value.  
+
+**Just a reminder, we can ignore this for now in this tutorial.** For deatils, refer to [RISC-V Calling Conventions](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc).  
 
 ## Hello, RISC-V!
 
 ### Step.1 Setup Stack Pointer for C Program
+
+Our firmware will be loaded to `0x80000000`, we can give `gp` a proper value for C program.  
 
 ```asm
 .global _clang_env_init
 
 .text
 _clang_env_init:
-li sp, 0x80001000
-j _uart_init
+li sp, 0x80200000 # give a proper memory address value to stack pointer
+j _uart_init # jump to a C function
+
 ```
 
 ### Step.2 Write UART initialization code with **C Language**
@@ -138,27 +152,24 @@ static int readble() {
 
 /* ... */
 
-uart_print("Hello, RISC-V!\n");
-uart_print("echo > ");
-
 int _uart_init() {
 	/* ... */
+	uart_print("Hello, RISC-V!\n");
+	uart_print("echo > ");
+	
 	while (1) {
 		if (readble()) {
 			int ch = uart_getc();
 			uart_putc(ch);
 		}
 	}
-	/* ... */
+	/* ...... */
 }
-
-/* ... */
 ```
 
 ## References
 
-### Calling Convention
-
+- [RISC-V Calling Conventions](https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc)
 - [RISC-V Toolchain Conventions](https://github.com/riscv-non-isa/riscv-toolchain-conventions)
 - [RISC-V ELF psABI Document](https://github.com/riscv-non-isa/riscv-elf-psabi-doc)
 - [RISC-V Assembly Programmer's Manual](https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md)
