@@ -14,6 +14,8 @@
 - Multiple _relocatable flles_ can be linked to resolve unknown symbols and form an _executable file_.  
 - An executable file contains machine instructions to be executed, and its meta information specifies the memory address where the program should be loaded.
 
+![](./assembly-and-linking.drawio.png)
+
 ## Why does a symbol with an unknown address value exist?  
 
 In this section, we learn how an assembly source file is converted into an executable file step by step, and why does a symbol with an unknown address value exist?  
@@ -87,9 +89,9 @@ Disassembly of section .text:
 
 0000000000000000 <hello_string-0x10>:
    0:   123452b7                lui     t0,0x12345
-   4:   67828293                addi    t0,t0,1656 # 12345678 <hello_string+0x12345668>
-   8:   000002b7                lui     t0,0x0
-   c:   00028293                mv      t0,t0
+   4:   67828293                addi    t0,t0,0x678 # 12345678 <hello_string+0x12345668>
+   8:   000002b7                lui     t0,0x00000
+   c:   00028293                addi    t0,t0,0x000 # mv t0,t0
 
 0000000000000010 <hello_string>: (Omitted, because here is just some ASCII data)
 ```
@@ -97,13 +99,13 @@ Disassembly of section .text:
 As we can see, the first operation that operates immediate number `0x12345678` has been translated as follows. The operand `0x12345678` is splited into higher 20 bits `0x12345` and lower 12 bits `0x678`, spreaded in `123452b7 : lui t0,0x12345` and `67828293 : addi  t0, t0, 0x678` respectively.  
 ```
    0:   123452b7                lui     t0,0x12345
-   4:   67828293                addi    t0,t0,1656 # 12345678 <hello_string+0x12345668>
+   4:   67828293                addi    t0,t0,0x678 # 12345678 <hello_string+0x12345668>
 ```
 
 However, the second operation that operates symbol `hello_string`, as we analyse before, the operand is replaced with `0x0`.  
 ```
-   8:   000002b7                lui     t0,0x0
-   c:   00028293                mv      t0,t0
+   8:   000002b7                lui     t0,0x00000
+   c:   00028293                addi    t0,t0,0x000 # mv t0,t0
 ``` 
 Specifically, compared to the first operation:   
 - `0x123452b7` -> `0x000002b7` OR `lui t0,0x12345` -> `lui t0,0x00000`  
@@ -143,7 +145,12 @@ _test.ld_ contains just a line: `. = 0x0;` . It tells the linker that the progra
 . = 0x0;
 ```
 
-Link `test.o` with the comand `riscv64-linux-gnu-ld -T test.ld test.o -o test`, then we can get a executable file `test`. Just like before, disassemble `test` with the command `riscv64-linux-gnu-objdump -S test`  
+Link `test.o` with the following command. Note that we add `--no-relax` option to prevent the linker from performing optimizations, so that we can compare the machine instructions before and after linking.  
+```
+riscv64-linux-gnu-ld -T test.ld --no-relax test.o -o test
+```
+
+Then we can get a executable file `test`. Just like before, disassemble `test` with the command `riscv64-linux-gnu-objdump -S test`  
 
 The instructions of `test` is as follows:  
 ```
@@ -154,40 +161,34 @@ test:     file format elf64-littleriscv
 
 Disassembly of section .text:
 
-0000000000000000 <hello_string-0xc>:
+0000000000000000 <hello_string-0x10>:
    0:   123452b7                lui     t0,0x12345
-   4:   67828293                addi    t0,t0,1656 # 12345678 <hello_string+0x1234566c>
-   8:   00c00293                li      t0,12
+   4:   67828293                addi    t0,t0,0x678 # 12345678 <hello_string+0x12345668>
+   8:   000002b7                lui     t0,0x00000
+   c:   01028293                addi    t0,t0,0x010 # 10 <hello_string>
 
-000000000000000c <hello_string>:
-        ...
+0000000000000010 <hello_string>:
 ```
 
 Compare 
 
 ```
-   8:   00c00293                li      t0,12
+   8:   000002b7                lui     t0,0x00000
+   c:   01028293                addi    t0,t0,0x010 # 10 <hello_string>
 ```
 
 with before:
 
 ```
-   8:   000002b7                lui     t0,0x0
-   c:   00028293                mv      t0,t0
+   8:   000002b7                lui     t0,0x00000
+   c:   00028293                addi    t0,t0,0x000 # mv t0,t0
 ```
 
-We can see that the machine instruction at `0x8` has been replaced with `00c00293 : li t0,12` (the same as `00c00293 : addi t0, t0, 0xc`).  
+We can see that the symbol `hello_string`'s value has been modified to `0x00000010`.    
 
-The completion version should be:  
-```
-   8:   000002b7                lui     t0,0x0
-   c:   00c00293                addi    t0, t0, 0xc
-```
-Maybe the linker knons that `000002b7 : lui t0,0x0` is redundant, so it removed this.  
+**The point is that: the symbol `hello_string` has been resolved and the associated machine instructions has been fixed!**  
 
-**The point is that: the symbol `hello_string` is resolved and the associated machine instructions is fixed!**  
-
-With command `riscv64-linux-gnu-objdump -t test`, we can print the symbols table, and we can see that the value of symbol `hello_string` is `0xc` now.  
+With command `riscv64-linux-gnu-objdump -t test`, we can print the symbols table, and we can see that the value of symbol `hello_string` is `0x10` now.  
 
 ```
 $ riscv64-linux-gnu-objdump -t test
@@ -197,7 +198,7 @@ test:     file format elf64-littleriscv
 SYMBOL TABLE:
 0000000000000000 l    d  .text  0000000000000000 .text
 0000000000000000 l    df *ABS*  0000000000000000 test.o
-000000000000000c l       .text  0000000000000000 hello_string
+0000000000000010 l       .text  0000000000000000 hello_string
 ```
 
 ## What happens if we change the load address?
@@ -213,9 +214,9 @@ Disassembly of section .text:
 
 0000000010000000 <hello_string-0x10>:
     10000000:   123452b7                lui     t0,0x12345
-    10000004:   67828293                addi    t0,t0,1656 # 12345678 <hello_string+0x2345668>
+    10000004:   67828293                addi    t0,t0,0x678 # 12345678 <hello_string+0x2345668>
     10000008:   100002b7                lui     t0,0x10000
-    1000000c:   01028293                addi    t0,t0,16 # 10000010 <hello_string>
+    1000000c:   01028293                addi    t0,t0,0x010 # 10000010 <hello_string>
 
 0000000010000010 <hello_string>:
 ```
