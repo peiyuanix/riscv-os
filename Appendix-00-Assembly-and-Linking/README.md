@@ -2,7 +2,7 @@
 ## Related file types and concepts  
 - machine instruction  
 - assembly source code file  
-- relocatable object file
+- relocatable file
 - executable file
 
 ## Compilation and linking workflow  
@@ -11,12 +11,12 @@
 - The assembler can translate an _assembly source file_ into a _relocatable file_.  
 - A relocatable file contains machine instructions and some meta information.  
 - A relocatable file can't be loaded and executed directly, because it may reference some symbols whose address values are not known yet.  
-- Multiple _relocatable flles_ can be linked to resolve unknown symbols and form _an executable file_.  
+- Multiple _relocatable flles_ can be linked to resolve unknown symbols and form an _executable file_.  
 - An executable file contains machine instructions to be executed, and its meta information specifies the memory address where the program should be loaded.
 
 ## Why does a symbol with an unknown address value exist?  
 
-In this section, we examine how an assembly source file is converted into an executable file step by step and how unresolved symbols are stored in a relocatable file.  
+In this section, we learn how an assembly source file is converted into an executable file step by step, and why does a symbol with an unknown address value exist?  
 
 ### Example assembly source file
 Take the following assembly source code file `test.s` as an example.  
@@ -27,7 +27,7 @@ Take the following assembly source code file `test.s` as an example.
 lui t0, %hi(0x12345678)        /* higher 20 bits */
 addi t0, t0, %lo(0x12345678)   /* lower 12 bits  */
 
-/* load a symbol value to t1 */
+/* load a symbol value to t0 */
 lui t0, %hi(hello_string)
 addi t0, t0, %lo(hello_string)
 
@@ -163,7 +163,13 @@ Disassembly of section .text:
         ...
 ```
 
-Compare with before:
+Compare 
+
+```
+   8:   00c00293                li      t0,12
+```
+
+with before:
 
 ```
    8:   000002b7                lui     t0,0x0
