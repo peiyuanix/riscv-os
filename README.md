@@ -16,7 +16,13 @@
 
 ## Part 2. Bare Metal RISC-V
 
+### Background
+- [Appendix-00: Assembly and Linking Basics](/Appendix-00-Assembly-and-Linking/README.md)
+
 ### Tutorials
 
 - [03: Bare Metal Hello RISC-V](/03-Bare-Metal-Hello-RISC-V)  
 - [04: Bare Metal Hello RISC-V (C Language Version)](/04-Bare-Metal-C-Language)
+
+## Appendix
+- [Appendix-00: Assembly and Linking Basics](/Appendix-00-Assembly-and-Linking/README.md)
