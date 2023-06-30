@@ -123,7 +123,7 @@ __UPDATE: The initialization is unnecessary for a minimal *Hello, RISC-V* progra
 
 ## Compilation and Linking Basics
 
-If you are not familiar with compilation and linking, refer to this concise introduction: [Compilation and Linking Basics](NOTES.md).  
+If you are not familiar with compilation and linking, refer to this concise introduction: [Compilation and Linking Basics](/Appendix-00-Assembly-and-Linking/README.md) .  
 
 ## Hello, RISC-V!
 
@@ -333,7 +333,7 @@ For *qemu-system-riscv64 -machine virt:*
 ](https://media.digikey.com/pdf/Data%20Sheets/Texas%20Instruments%20PDFs/PC16550D.pdf)
 
 ### About ELF/Relocation/Linking/Toolchains
-- [Compilation and Linking Basics](NOTES.md)
+- [Compilation and Linking Basics](/Appendix-00-Assembly-and-Linking/README.md)
 - [Executable and Linkable Format (ELF)](http://www.skyfree.org/linux/references/ELF_Format.pdf)
 - [as - The GNU assembler](https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_node/as_toc.html)
 - [ld - The GNU Linker: Command Language](https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html#SEC5)
