@@ -2,6 +2,6 @@
   "files.associations": {
     "riscv_asm.h": "c",
     "riscv_cpu.h": "c",
-    "time.h": "c"
+    "timer.h": "c"
   }
 }

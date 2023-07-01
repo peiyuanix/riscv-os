@@ -24,6 +24,9 @@
 #define PLATFORM_UART_INPUT_FREQ 10000000
 #define PLATFORM_UART_BAUDRATE 115200
 
+#define UART_IE_TXWM (1 << 0)
+#define UART_IE_RXWM (1 << 1)
+
 #define UART_REG(offset) (*(u32 *)(UART_BASE + offset))
 
 static u8 *uart_base_addr = (u8 *)UART_BASE;
@@ -157,6 +160,16 @@ static inline void uart_init()
 
   /* Enable Rx */
   set_reg(UART_RXCTRL_OFFSET, UART_RXCTRL_RXEN);
+}
+
+static inline u32 _uart_ie()
+{
+  get_reg(UART_IE_OFFSET);
+}
+
+static inline void _uart_ie_write(u32 val)
+{
+  set_reg(UART_IE_OFFSET, val);
 }
 
 #endif

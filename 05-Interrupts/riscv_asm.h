@@ -34,11 +34,27 @@ static inline void csrw_mstatus(const volatile u64 val)
                : "r"(val));
 }
 
+static inline void csrs_mstatus(const volatile u64 val)
+{
+  asm volatile("csrs mstatus, %0"
+               :
+               : "r"(val));
+}
+
 static inline void csrc_mstatus(const volatile u64 val)
 {
   asm volatile("csrc mstatus, %0"
                :
                : "r"(val));
+}
+
+static inline u64 csrr_mcause()
+{
+  volatile u64 val;
+  asm volatile("csrr %0, mcause"
+               : "=r"(val)
+               :);
+  return val;
 }
 
 static inline void ecall()
