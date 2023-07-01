@@ -91,7 +91,7 @@ static inline void uart_print_int(u64 val, int base)
   }
 }
 
-void uart_printf(const char *format, ...)
+static inline void uart_printf(const char *format, ...)
 {
   va_list args;
   va_start(args, format);

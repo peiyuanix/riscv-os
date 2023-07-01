@@ -1,5 +1,7 @@
 {
   "files.associations": {
-    "riscv_asm.h": "c"
+    "riscv_asm.h": "c",
+    "riscv_cpu.h": "c",
+    "time.h": "c"
   }
 }

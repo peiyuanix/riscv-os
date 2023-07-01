@@ -11,6 +11,11 @@ static inline u64 mtime()
   return readu64(MTIME);
 }
 
+static inline u64 mtimecmp_0()
+{
+  return readu64(MTIMECMP_0);
+}
+
 static inline u64 set_timeout(u64 timeout)
 {
   writeu64(MTIMECMP_0, mtime() + timeout);

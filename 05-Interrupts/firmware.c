@@ -29,17 +29,13 @@ void firmware_main()
   uart_init();
   // ecall();
   // echo();
-  u64 prev_mtime;
-  u64 curr_mtime;
+  csrw_mie(1 << 7);
+  csrw_mstatus(1 << 3);
+
+  uart_printf("default MTIMECMP_0 is %d\n", mtimecmp_0());
+
+  set_timeout(10000000);
   while (1)
   {
-    for (u32 i = 0; i < 300000000; i++)
-    {
-    }
-    curr_mtime = mtime();
-    uart_printf("Current Ticks: %d, Ticks Delta: %d\n", curr_mtime, curr_mtime - prev_mtime);
-    prev_mtime = curr_mtime;
-    set_timeout(10000000);
   }
-
 }
