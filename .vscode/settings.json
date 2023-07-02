@@ -2,6 +2,8 @@
   "files.associations": {
     "riscv_asm.h": "c",
     "riscv_cpu.h": "c",
-    "timer.h": "c"
+    "timer.h": "c",
+    "riscv_types.h": "c",
+    "stdbool.h": "c"
   }
 }

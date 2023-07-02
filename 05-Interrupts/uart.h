@@ -61,37 +61,59 @@ static inline void uart_print(char *str)
   }
 }
 
-static inline void uart_print_int(u64 val, int base)
+static void uart_print_digit(unsigned long val, unsigned long base, bool uppercase)
 {
-  if (base < 2 || base > 16)
+  const char *digits = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+
+  if (val < base)
   {
-    return;
+    uart_putc(digits[val]);
   }
-
-  char digits[] = "0123456789ABCDEF";
-  u64 quotient = val;
-  u64 remainder;
-
-  if (val == 0)
+  else
   {
-    uart_putc('0');
-    return;
+    uart_print_digit(val / base, base, uppercase);
+    uart_putc(digits[val % base]);
   }
+}
 
-  char buffer[64];
-  int index = 0;
-
-  while (quotient > 0)
+static inline void uart_print_int(int val, int base)
+{
+  if (val < 0)
   {
-    remainder = quotient % base;
-    buffer[index++] = digits[remainder];
-    quotient = quotient / base;
+    uart_putc('-');
+    val = -val;
   }
+  uart_print_digit(val, base, false);
+}
 
-  for (int i = index - 1; i >= 0; i--)
+static inline void uart_print_uint(unsigned int val, int base)
+{
+  uart_print_digit(val, base, false);
+}
+
+static inline void uart_print_uint_upper(unsigned int val, int base)
+{
+  uart_print_digit(val, base, true);
+}
+
+static inline void uart_print_long(long val, int base)
+{
+  if (val < 0)
   {
-    uart_putc(buffer[i]);
+    uart_putc('-');
+    val = -val;
   }
+  uart_print_digit(val, base, false);
+}
+
+static inline void uart_print_ulong(unsigned long val, int base)
+{
+  uart_print_digit(val, base, false);
+}
+
+static inline void uart_print_ulong_upper(unsigned long val, int base)
+{
+  uart_print_digit(val, base, true);
 }
 
 static inline void uart_printf(const char *format, ...)
@@ -108,7 +130,7 @@ static inline void uart_printf(const char *format, ...)
       {
       case 'c':
       {
-        char c = va_arg(args, int);
+        char c = (char)va_arg(args, unsigned int);
         uart_putc(c);
         break;
       }
@@ -124,14 +146,59 @@ static inline void uart_printf(const char *format, ...)
         uart_print_int(val, 10);
         break;
       }
-      case 'x':
+      case 'u':
       {
-        int val = va_arg(args, int);
-        uart_print_int(val, 16);
+        unsigned int val = va_arg(args, unsigned int);
+        uart_print_uint(val, 10);
         break;
       }
-        // 添加其他格式化标识符的处理逻辑（例如：%f、%x等）
-
+      case 'x':
+      {
+        unsigned int val = va_arg(args, unsigned int);
+        uart_print_uint(val, 16);
+        break;
+      }
+      case 'X':
+      {
+        unsigned int val = va_arg(args, unsigned int);
+        uart_print_uint_upper(val, 16);
+        break;
+      }
+      case 'l':
+      {
+        format++;
+        switch (*format)
+        {
+        case 'd':
+        {
+          long val = va_arg(args, long);
+          uart_print_long(val, 10);
+          break;
+        }
+        case 'u':
+        {
+          unsigned long val = va_arg(args, unsigned long);
+          uart_print_ulong(val, 10);
+          break;
+        }
+        case 'x':
+        {
+          unsigned long val = va_arg(args, unsigned long);
+          uart_print_ulong(val, 16);
+          break;
+        }
+        case 'X':
+        {
+          unsigned long val = va_arg(args, unsigned long);
+          uart_print_ulong_upper(val, 16);
+          break;
+        }
+        default:
+          uart_putc(*format);
+          break;
+        }
+        break;
+      }
       default:
         uart_putc(*format);
         break;

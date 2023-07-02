@@ -6,6 +6,7 @@ cpu_t trap_cpu;
 
 void trap_handler()
 {
-  uart_printf("[trap_handler] mcause: 0x%x, current ticks: %d\n", csrr_mcause(), mtime());
+  u64 mcause = csrr_mcause();
+  uart_printf("[trap_handler] mcause: 0x%lX, current ticks: %d\n", mcause, mtime());
   set_timeout(10000000);
 }
