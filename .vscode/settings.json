@@ -4,6 +4,10 @@
     "riscv_cpu.h": "c",
     "timer.h": "c",
     "riscv_types.h": "c",
-    "stdbool.h": "c"
+    "stdbool.h": "c",
+    "proc.h": "c",
+    "stdlib.h": "c",
+    "kstring.h": "c",
+    "kdef.h": "c"
   }
 }
