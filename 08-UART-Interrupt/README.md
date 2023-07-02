@@ -9,9 +9,19 @@ Refer to:
 
 **Attention: _sifive_u_ has multiple cores!** When I first wrote `Hello, RISC-V!` for _sifive_u_, I ignored its multi-core nature, resulting in duplicate and interleaved output.  
 
-## Echo
+## RISC-V Interrupt Basics
+### Related Privilege Registers
+### CLINT - Core Local Interrupt
+### PLIC - Platform Level Interrupt Controller
 
-****
+## Timer Interrupt-based Process Scheduling
+
+```sh
+make run
+```
+
+## UART0 Receiver Interrupt
+todo
 
 ## References
 
