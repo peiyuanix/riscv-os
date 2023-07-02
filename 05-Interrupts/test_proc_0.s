@@ -10,7 +10,7 @@ loop:
   j loop
 
 test_proc_0_stack_bottom:
-.rept 1024
+.rept (1 << 20)
   .byte 0
 .endr
 test_proc_0_stack_top:

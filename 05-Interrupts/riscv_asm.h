@@ -27,6 +27,15 @@ static inline void csrw_mie(const volatile u64 val)
                : "r"(val));
 }
 
+static inline u64 csrr_mstatus()
+{
+  volatile u64 val;
+  asm volatile("csrr %0, mstatus"
+               : "=r"(val)
+               :);
+  return val;
+}
+
 static inline void csrw_mstatus(const volatile u64 val)
 {
   asm volatile("csrw mstatus, %0"

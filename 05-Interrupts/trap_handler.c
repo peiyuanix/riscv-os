@@ -33,13 +33,14 @@ void trap_handler()
       // iterate the processes from the next process, ending with the active process
       for (int ring_index = 1; ring_index <= PROC_TOTAL_COUNT; ring_index++)
       {
-        struct proc *proc = &proc_list[(active_pid + ring_index) % PROC_TOTAL_COUNT];
+        int real_index = (active_pid + ring_index) % PROC_TOTAL_COUNT;
+        struct proc *proc = &proc_list[real_index];
         // run this process if it is ready
         if (proc->state == PROC_STATE_READY)
         {
           trap_cpu = proc->cpu;
           active_pid = proc->pid;
-          uart_printf("[Trap - M-mode Timer - 3] Resume pid: %d, pc: 0x%lx\n", active_pid, trap_cpu.pc);
+          uart_printf("[Trap - M-mode Timer - 3] Resume pid: %d, pc: 0x%lx, real_index: %d\n", active_pid, trap_cpu.pc, real_index);
           break;
         }
       }

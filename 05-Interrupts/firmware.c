@@ -9,8 +9,10 @@
 extern void trap_entry();
 extern void test_proc_0_entry();
 extern void test_proc_1_entry();
+extern void test_proc_2_entry();
 extern u64 test_proc_0_stack_top[];
 extern u64 test_proc_1_stack_top[];
+extern u64 test_proc_2_stack_top[];
 
 void echo()
 {
@@ -79,7 +81,19 @@ void proc_init()
   uart_printf("[proc_init] test_proc_1: pc is 0x%lx, stack_top is 0x%lx\n", &test_proc_1, test_proc_1_stack_top);
   proc_list[1] = test_proc_1;
 
-  for (int i = 2; i < PROC_TOTAL_COUNT; i++)
+  struct proc test_proc_2 = {
+      .name = "test_proc_2",
+      .pid = 2,
+      .hartid = 0,
+      .state = PROC_STATE_READY,
+      .cpu = {
+          .pc = (u64)test_proc_2_entry,
+          .x2 = (u64)test_proc_2_stack_top,
+      }};
+  uart_printf("[proc_init] test_proc_2: pc is 0x%lx, stack_top is 0x%lx\n", &test_proc_2, test_proc_2_stack_top);
+  proc_list[2] = test_proc_2;
+
+  for (int i = 3; i < PROC_TOTAL_COUNT; i++)
   {
     memset(&proc_list[i], 0, sizeof(proc_list[i]));
     proc_list[i].state = PROC_STATE_NONE;
