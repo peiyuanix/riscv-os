@@ -9,9 +9,9 @@
 
 enum proc_state
 {
-  PROC_NONE = 0,
-  PROC_READY,
-  PROC_RUNNING,
+  PROC_STATE_NONE = 0,
+  PROC_STATE_READY,
+  PROC_STATE_RUNNING,
 };
 
 struct proc

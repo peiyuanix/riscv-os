@@ -57,6 +57,15 @@ static inline u64 csrr_mcause()
   return val;
 }
 
+static inline u64 csrr_mepc()
+{
+  volatile u64 val;
+  asm volatile("csrr %0, mepc"
+               : "=r"(val)
+               :);
+  return val;
+}
+
 static inline void ecall()
 {
   asm volatile("ecall"

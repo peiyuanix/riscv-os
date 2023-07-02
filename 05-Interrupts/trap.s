@@ -59,8 +59,8 @@ call trap_handler
 la x5, trap_cpu
 # restore privilege registers
 # restore mepc by x1, which will be restored later
-csrr x1, mepc
 ld x1, (32 * REGSZ)(x5)
+csrw mepc, x1
 # restore general purpose registers
 # x0 ~ x4
 ld x0, (0 * REGSZ)(x5)

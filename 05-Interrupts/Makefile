@@ -6,7 +6,7 @@ OBJCOPY := ${CROSS_COMPILE}objcopy
 
 bin/firmware.bin: clang_env_init.s firmware.c trap.s trap_handler.c riscv_asm.h \
 	riscv_types.h uart.h timer.h uart.h interrupts.h plic.h clang_env_init.ld \
-	test_proc_0.s test_proc_1.s proc.h proc.c kdef.h kstring.h kstring.c
+	test_proc_0.s test_proc_1.s proc.h proc.c kdef.h kstring.h kstring.c riscv_arch.h riscv_cpu.h
 	${AS} clang_env_init.s -g -o bin/clang_env_init.o
 	${AS} trap.s -g -o bin/trap.o
 	${AS} test_proc_0.s -g -o bin/test_proc_0.o

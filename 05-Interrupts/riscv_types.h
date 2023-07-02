@@ -2,6 +2,7 @@
 #define _RISCV_TYPES_H
 
 #include <stdbool.h>
+#include "riscv_arch.h"
 
 typedef unsigned char u8;
 typedef unsigned short u16;

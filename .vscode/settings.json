@@ -8,6 +8,9 @@
     "proc.h": "c",
     "stdlib.h": "c",
     "kstring.h": "c",
-    "kdef.h": "c"
+    "kdef.h": "c",
+    "riscv_arch.h": "c",
+    "uart.h": "c",
+    "interrupts.h": "c"
   }
 }
