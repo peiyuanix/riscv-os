@@ -10,9 +10,9 @@ extern void trap_entry();
 extern void test_proc_0_entry();
 extern void test_proc_1_entry();
 extern void test_proc_2_entry();
-extern u64 test_proc_0_stack_top[];
-extern u64 test_proc_1_stack_top[];
-extern u64 test_proc_2_stack_top[];
+extern void *test_proc_0_stack_top;
+extern void *test_proc_1_stack_top;
+extern void *test_proc_2_stack_top;
 
 void echo()
 {
@@ -116,6 +116,7 @@ void firmware_main()
   set_timeout(10000000);
 
   csrw_mie(MIE_MTIE | MIE_MEIE);
+  // csrw_mie(MIE_MTIE);
   csrs_mstatus(MSTAUTS_MIE);
 
   while (1)

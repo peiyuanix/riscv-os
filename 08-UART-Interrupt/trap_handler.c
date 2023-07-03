@@ -3,6 +3,7 @@
 #include "timer.h"
 #include "proc.h"
 #include "interrupts.h"
+#include "riscv_priv.h"
 
 struct cpu trap_cpu;
 
@@ -13,7 +14,6 @@ void trap_handler()
   {
   case MCAUSE_INTR_M_TIMER:
   {
-    uart_printf("[Trap - M-mode Timer - 1] active_pid: %d, mcause: 0x%lX, current ticks: %d\n", active_pid, mcause, mtime());
     // there exists runnable processes
     if (proc_list[0].state != PROC_STATE_NONE)
     {
@@ -22,13 +22,13 @@ void trap_handler()
       {
         active_pid = 0;
         trap_cpu = proc_list[0].cpu;
+        uart_printf("[Trap - M-mode Timer] Scheduler Init. Ticks: %ld\n", active_pid, mcause, mtime());
       }
 
       // save cpu state for the active process
       proc_list[active_pid].cpu = trap_cpu;
       // suspend the active process
       proc_list[active_pid].state = PROC_STATE_READY;
-      uart_printf("[Trap - M-mode Timer - 2] Suspend pid: %d, pc: 0x%lx\n", active_pid, trap_cpu.pc);
 
       // iterate the processes from the next process, ending with the active process
       for (int ring_index = 1; ring_index <= PROC_TOTAL_COUNT; ring_index++)
@@ -38,9 +38,10 @@ void trap_handler()
         // run this process if it is ready
         if (proc->state == PROC_STATE_READY)
         {
+          uart_printf("[Trap - M-mode Timer] Scheduler(Ticks = %ld): (PID = %d, PC = 0x%lx) => (PID = %d, PC = 0x%lx)\n", mtime(), active_pid, trap_cpu.pc, proc->pid, proc->cpu.pc);
+          // mstatus_set_spp_to_u();
           trap_cpu = proc->cpu;
           active_pid = proc->pid;
-          uart_printf("[Trap - M-mode Timer - 3] Resume pid: %d, pc: 0x%lx, real_index: %d\n", active_pid, trap_cpu.pc, real_index);
           break;
         }
       }
