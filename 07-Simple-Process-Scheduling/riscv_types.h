@@ -1,7 +1,7 @@
 #ifndef _RISCV_TYPES_H
 #define _RISCV_TYPES_H
 
-#include <stdbool.h>
+#include "kbool.h"
 #include "riscv_arch.h"
 
 typedef unsigned char u8;

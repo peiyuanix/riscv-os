@@ -11,6 +11,7 @@
     "kdef.h": "c",
     "riscv_arch.h": "c",
     "uart.h": "c",
-    "interrupts.h": "c"
+    "interrupts.h": "c",
+    "kbool.h": "c"
   }
 }

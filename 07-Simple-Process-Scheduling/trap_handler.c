@@ -22,7 +22,7 @@ void trap_handler()
       {
         active_pid = 0;
         trap_cpu = proc_list[0].cpu;
-        uart_printf("[Trap - M-mode Timer] Scheduler Init. Ticks: %d\n", active_pid, mcause, mtime());
+        uart_printf("[Trap - M-mode Timer] Scheduler Init. Ticks: %ld\n", active_pid, mcause, mtime());
       }
 
       // save cpu state for the active process
@@ -38,7 +38,7 @@ void trap_handler()
         // run this process if it is ready
         if (proc->state == PROC_STATE_READY)
         {
-          uart_printf("[Trap - M-mode Timer] Scheduler(Ticks = %d): (PID = %d, PC = 0x%lx) => (PID = %d, PC = 0x%lx)\n", mtime(), active_pid, trap_cpu.pc, proc->pid, proc->cpu.pc);
+          uart_printf("[Trap - M-mode Timer] Scheduler(Ticks = %ld): (PID = %d, PC = 0x%lx) => (PID = %d, PC = 0x%lx)\n", mtime(), active_pid, trap_cpu.pc, proc->pid, proc->cpu.pc);
           // mstatus_set_spp_to_u();
           trap_cpu = proc->cpu;
           active_pid = proc->pid;
