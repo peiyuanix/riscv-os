@@ -22,7 +22,7 @@ bin/%.asmo: %.s
 	${AS} -g $< -o $@
 
 bin/%.clango: %.c ${HEADERS}
-	${CC} -c -O0 -g $< -o $@
+	${CC} -ffreestanding -c -O0 -g $< -o $@
 
 run: bin/firmware.bin
 	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -display none
