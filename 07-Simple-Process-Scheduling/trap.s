@@ -53,6 +53,8 @@ sd x1, (32 * REGSZ)(x5)
 
 # call trap_handler
 # Need set stack pointer?
+la t0, trap_stack_top
+ld sp, 0(t0)
 call trap_handler
 
 # use x5 as cpu state base address register
