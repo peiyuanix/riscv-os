@@ -5,12 +5,12 @@
 ### C Program and Stack
 The most important thing we need to know is that **C programs rely _Stack_ to run**.  
 
-- For RISC-V, the stack pointer register is `gp` or `x3`. 
-- When a C function is called, it allocates memory for its running by **decreasing** `gp`.  
+- For RISC-V, the stack pointer register is `sp` or `x2`. 
+- When a C function is called, it allocates memory for its running by **decreasing** `sp`.  
 
-The default `gp` at startup is `0x0`, and the memory space below `0x0` is of course illegal.  
+The default `sp` at startup is `0x0`, and the memory space below `0x0` is of course illegal.  
 
-Therefore, we must set a reasonable value for `gp`, so that we can jump from our startup code written in assembly to a C function.  
+Therefore, we must set a reasonable value for `sp`, so that we can jump from our startup code written in assembly to a C function.  
 
 ### C Program/RISC-V Calling Convention
 
@@ -23,7 +23,7 @@ However, to call an assembly code snippet from a C function and return it, we ne
 
 ### Step.1 Setup Stack Pointer for C Program
 
-Our firmware will be loaded to `0x80000000`, we can give `gp` a proper value for C program.  
+Our firmware will be loaded to `0x80000000`, we can give `sp` a proper value for C program.  
 
 ```asm
 .global _clang_env_init
