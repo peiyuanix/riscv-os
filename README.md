@@ -27,7 +27,7 @@ Refer to:
 
 - [05: Interrupt Basics (TODO)](/05-Interrupt-Basics)  
 - [06: Timer Interrupt (Code Completed)](/06-Timer-Interrupt)  
-- [07: Simple Process Scheduling (Code Completed)](/07-Simple-Process-Scheduling)  
+- [07: Timer Interrupt-based Process Scheduling (Code Completed)](/07-Simple-Process-Scheduling)  
 - [08: UART Interrupt (Partially Completed)](/08-UART-Interrupt)  
 
 ## Appendix
