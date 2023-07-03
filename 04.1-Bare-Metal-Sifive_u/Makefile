@@ -1,0 +1,35 @@
+CROSS_COMPILE := riscv64-linux-gnu-
+CC := ${CROSS_COMPILE}gcc
+AS := ${CROSS_COMPILE}as
+LD := ${CROSS_COMPILE}ld
+OBJCOPY := ${CROSS_COMPILE}objcopy
+
+CLANG_SRC := firmware.c
+ASM_SRC := clang_env_init.s
+HEADERS := riscv_asm.h riscv_types.h
+
+OBJECTS = $(addprefix bin/,$(ASM_SRC:.s=.asmo))
+OBJECTS += $(addprefix bin/,$(CLANG_SRC:.c=.clango))
+
+all: bin/firmware.bin
+
+bin/firmware.bin: ${OBJECTS} ${HEADERS} clang_env_init.ld
+	${LD} --no-relax -T clang_env_init.ld ${OBJECTS} -o bin/firmware
+	${OBJCOPY} -O binary -S bin/firmware bin/firmware.bin
+
+bin/%.asmo: %.s
+	${AS} -g $< -o $@
+
+bin/%.clango: %.c ${HEADERS}
+	${CC} -ffreestanding -c -O0 -g $< -o $@
+
+run: bin/firmware.bin
+	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -display none
+
+debug: bin/firmware.bin
+	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -S
+
+clean:
+	rm -rf bin/
+
+$(shell mkdir -p bin)
