@@ -6,8 +6,7 @@ OBJCOPY := ${CROSS_COMPILE}objcopy
 
 CLANG_SRC := firmware.c trap_handler.c
 ASM_SRC := clang_env_init.s trap.s
-HEADERS := riscv_asm.h riscv_types.h uart.h timer.h uart.h interrupts.h \
-					riscv_arch.h riscv_cpu.h
+HEADERS := riscv_arch.h riscv_asm.h riscv_cpu.h uart.h timer.h interrupts.h
 
 OBJECTS = $(addprefix bin/,$(ASM_SRC:.s=.asmo))
 OBJECTS += $(addprefix bin/,$(CLANG_SRC:.c=.clango))

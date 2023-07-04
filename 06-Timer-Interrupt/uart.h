@@ -1,7 +1,7 @@
 #ifndef _UART_H
 #define _UART_H
 
-#include "riscv_types.h"
+#include "riscv_arch.h"
 #include "riscv_asm.h"
 #include <stdarg.h>
 

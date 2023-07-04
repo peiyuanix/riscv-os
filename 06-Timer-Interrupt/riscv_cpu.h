@@ -1,7 +1,7 @@
 #ifndef _CPU_H
 #define _CPU_H
 
-#include "riscv_types.h"
+#include "riscv_arch.h"
 
 struct cpu
 {
