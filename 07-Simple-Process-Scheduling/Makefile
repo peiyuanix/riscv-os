@@ -6,8 +6,8 @@ OBJCOPY := ${CROSS_COMPILE}objcopy
 
 CLANG_SRC := firmware.c trap_handler.c proc.c kstring.c test_processes.c
 ASM_SRC := clang_env_init.s trap.s
-HEADERS := riscv_asm.h riscv_types.h uart.h timer.h uart.h interrupts.h \
-					plic.h proc.h kdef.h kstring.h riscv_arch.h riscv_cpu.h riscv_priv.h
+HEADERS := riscv_arch.h riscv_asm.h uart.h timer.h uart.h interrupts.h \
+					proc.h kstring.h riscv_cpu.h
 
 OBJECTS = $(addprefix bin/,$(ASM_SRC:.s=.asmo))
 OBJECTS += $(addprefix bin/,$(CLANG_SRC:.c=.clango))
@@ -25,10 +25,10 @@ bin/%.clango: %.c ${HEADERS}
 	${CC} -ffreestanding -c -O0 -g $< -o $@
 
 run: bin/firmware.bin
-	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -display none
+	qemu-system-riscv64 -machine virt -smp 1 -m 2G -serial stdio -bios bin/firmware.bin -s -display none
 
 debug: bin/firmware.bin
-	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -S
+	qemu-system-riscv64 -machine virt -smp 1 -m 2G -serial stdio -bios bin/firmware.bin -s -S
 
 clean:
 	rm -rf bin/

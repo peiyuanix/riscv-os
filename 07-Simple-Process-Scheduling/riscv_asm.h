@@ -1,7 +1,7 @@
 #ifndef _RISCV_ASM_H
 #define _RISCV_ASM_H
 
-#include "riscv_types.h"
+#include "riscv_arch.h"
 
 #define readu8(addr) (*(const u8 *)(addr))
 #define readu16(addr) (*(const u16 *)(addr))

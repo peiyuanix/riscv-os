@@ -4,7 +4,7 @@
 #define PROC_NAME_MAXLEN 64
 #define PROC_TOTAL_COUNT 16
 
-#include "riscv_types.h"
+#include "riscv_arch.h"
 #include "riscv_cpu.h"
 
 enum proc_state

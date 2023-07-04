@@ -1,59 +1,47 @@
 #ifndef _UART_H
 #define _UART_H
 
-#include "riscv_types.h"
+#include "riscv_arch.h"
 #include "riscv_asm.h"
 #include <stdarg.h>
 
-#define UART_BASE 0x10010000
+#define UART_BASE 0x10000000
 
-#define UART_TXDATA_OFFSET 0x00
-#define UART_RXDATA_OFFSET 0x04
-#define UART_TXCTRL_OFFSET 0x08
-#define UART_RXCTRL_OFFSET 0x0c
-#define UART_IE_OFFSET 0x10
-#define UART_IP_OFFSET 0x14
-#define UART_DIV_OFFSET 0x18
-
-#define UART_TXFIFO_FULL 0x80000000
-#define UART_RXFIFO_EMPTY 0x80000000
-#define UART_RXFIFO_DATA 0x000000ff
-#define UART_TXCTRL_TXEN 0x1
-#define UART_RXCTRL_RXEN 0x1
+#define UART_RBR_OFFSET 0  /* In:  Recieve Buffer Register */
+#define UART_THR_OFFSET 0  /* Out: Transmitter Holding Register */
+#define UART_DLL_OFFSET 0  /* Out: Divisor Latch Low */
+#define UART_IER_OFFSET 1  /* I/O: Interrupt Enable Register */
+#define UART_DLM_OFFSET 1  /* Out: Divisor Latch High */
+#define UART_FCR_OFFSET 2  /* Out: FIFO Control Register */
+#define UART_IIR_OFFSET 2  /* I/O: Interrupt Identification Register */
+#define UART_LCR_OFFSET 3  /* Out: Line Control Register */
+#define UART_MCR_OFFSET 4  /* Out: Modem Control Register */
+#define UART_LSR_OFFSET 5  /* In:  Line Status Register */
+#define UART_MSR_OFFSET 6  /* In:  Modem Status Register */
+#define UART_SCR_OFFSET 7  /* I/O: Scratch Register */
+#define UART_MDR1_OFFSET 8 /* I/O:  Mode Register */
 
 #define PLATFORM_UART_INPUT_FREQ 10000000
 #define PLATFORM_UART_BAUDRATE 115200
 
-#define UART_IE_TXWM (1 << 0)
-#define UART_IE_RXWM (1 << 1)
-
-#define UART_REG(offset) (*(u32 *)(UART_BASE + offset))
-
 static u8 *uart_base_addr = (u8 *)UART_BASE;
 
-static inline void set_reg(u32 offset, u32 val)
+static void set_reg(u32 offset, u32 val)
 {
-  writeu32(uart_base_addr + offset, val);
+  writeu8(uart_base_addr + offset, val);
 }
 
-static inline u32 get_reg(u32 offset)
+static u32 get_reg(u32 offset)
 {
-  return readu32(uart_base_addr + offset);
+  return readu8(uart_base_addr + offset);
 }
 
-static inline void uart_putc(u32 ch)
+static void uart_putc(u8 ch)
 {
-  while (get_reg(UART_TXDATA_OFFSET) & UART_TXFIFO_FULL)
-    ;
-  set_reg(UART_TXDATA_OFFSET, ch);
+  set_reg(UART_THR_OFFSET, ch);
 }
 
-static inline u32 uart_getc()
-{
-  return get_reg(UART_RXDATA_OFFSET);
-}
-
-static inline void uart_print(char *str)
+static void uart_print(char *str)
 {
   while (*str)
   {
@@ -216,27 +204,33 @@ static inline void uart_printf(const char *format, ...)
 
 static inline void uart_init()
 {
-  /* Configure baudrate */
-  set_reg(UART_DIV_OFFSET, 0);
+  u16 bdiv = (PLATFORM_UART_INPUT_FREQ + 8 * PLATFORM_UART_BAUDRATE) / (16 * PLATFORM_UART_BAUDRATE);
 
-  /* Disable interrupts */
-  set_reg(UART_IE_OFFSET, 0);
+  /* Disable all interrupts */
+  set_reg(UART_IER_OFFSET, 0x00);
+  /* Enable DLAB */
+  set_reg(UART_LCR_OFFSET, 0x80);
 
-  /* Enable TX */
-  set_reg(UART_TXCTRL_OFFSET, UART_TXCTRL_TXEN);
+  if (bdiv)
+  {
+    /* Set divisor low byte */
+    set_reg(UART_DLL_OFFSET, bdiv & 0xff);
+    /* Set divisor high byte */
+    set_reg(UART_DLM_OFFSET, (bdiv >> 8) & 0xff);
+  }
 
-  /* Enable Rx */
-  set_reg(UART_RXCTRL_OFFSET, UART_RXCTRL_RXEN);
-}
-
-static inline u32 _uart_ie()
-{
-  get_reg(UART_IE_OFFSET);
-}
-
-static inline void _uart_ie_write(u32 val)
-{
-  set_reg(UART_IE_OFFSET, val);
+  /* 8 bits, no parity, one stop bit */
+  set_reg(UART_LCR_OFFSET, 0x03);
+  /* Enable FIFO */
+  set_reg(UART_FCR_OFFSET, 0x01);
+  /* No modem control DTR RTS */
+  set_reg(UART_MCR_OFFSET, 0x00);
+  /* Clear line status */
+  get_reg(UART_LSR_OFFSET);
+  /* Read receive buffer */
+  get_reg(UART_RBR_OFFSET);
+  /* Set scratchpad */
+  set_reg(UART_SCR_OFFSET, 0x00);
 }
 
 #endif

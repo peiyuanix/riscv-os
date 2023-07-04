@@ -3,7 +3,6 @@
 #include "timer.h"
 #include "proc.h"
 #include "interrupts.h"
-#include "riscv_priv.h"
 
 struct cpu trap_cpu;
 u8 trap_stack[1 << 20];
@@ -41,7 +40,6 @@ void trap_handler()
         if (proc->state == PROC_STATE_READY)
         {
           uart_printf("[Trap - M-mode Timer] Scheduler(Ticks = %ld): (PID = %d, PC = 0x%lx) => (PID = %d, PC = 0x%lx)\n", mtime(), active_pid, trap_cpu.pc, proc->pid, proc->cpu.pc);
-          // mstatus_set_spp_to_u();
           trap_cpu = proc->cpu;
           active_pid = proc->pid;
           break;

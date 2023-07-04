@@ -1,4 +1,4 @@
-#include "kdef.h"
+#include "riscv_arch.h"
 #include "uart.h"
 
 #define INTERVAL 100000000
