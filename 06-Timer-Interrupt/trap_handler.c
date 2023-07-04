@@ -4,6 +4,8 @@
 #include "interrupts.h"
 
 struct cpu trap_cpu;
+u8 trap_stack[1 << 20];
+void *trap_stack_top = &trap_stack[sizeof(trap_stack) - 1];
 
 void trap_handler()
 {
