@@ -57,6 +57,13 @@ static inline void csrw_mideleg(const volatile u64 val)
                : "r"(val));
 }
 
+static inline void csrw_medeleg(const volatile u64 val)
+{
+  asm volatile("csrw medeleg, %0"
+               :
+               : "r"(val));
+}
+
 static inline u64 csrr_mstatus()
 {
   volatile u64 val;
@@ -80,16 +87,25 @@ static inline void csrs_mstatus(const volatile u64 val)
                : "r"(val));
 }
 
-static inline void csrs_sstatus(const volatile u64 val)
+static inline void csrc_mstatus(const volatile u64 val)
 {
-  asm volatile("csrs sstatus, %0"
+  asm volatile("csrc mstatus, %0"
                :
                : "r"(val));
 }
 
-static inline void csrc_mstatus(const volatile u64 val)
+static inline u64 csrr_sstatus()
 {
-  asm volatile("csrc mstatus, %0"
+  volatile u64 val;
+  asm volatile("csrr %0, sstatus"
+               : "=r"(val)
+               :);
+  return val;
+}
+
+static inline void csrs_sstatus(const volatile u64 val)
+{
+  asm volatile("csrs sstatus, %0"
                :
                : "r"(val));
 }
