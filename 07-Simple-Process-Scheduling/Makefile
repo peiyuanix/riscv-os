@@ -25,10 +25,10 @@ bin/%.clango: %.c ${HEADERS}
 	${CC} -ffreestanding -c -O0 -g $< -o $@
 
 run: bin/firmware.bin
-	qemu-system-riscv64 -machine virt -smp 1 -m 2G -serial stdio -bios bin/firmware.bin -s -display none
+	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -display none
 
 debug: bin/firmware.bin
-	qemu-system-riscv64 -machine virt -smp 1 -m 2G -serial stdio -bios bin/firmware.bin -s -S
+	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -S
 
 clean:
 	rm -rf bin/
