@@ -19,3 +19,7 @@ Run with:
 ```sh
 make run
 ```
+
+## GDB & QEMU: Debugging multicore machines
+
+Refer to [QEMU Debugging multicore machines](https://qemu.readthedocs.io/en/latest/system/gdb.html#debugging-multicore-machines)

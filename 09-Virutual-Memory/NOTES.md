@@ -7,6 +7,11 @@
 > 
 > In a straightforward implementation, reading or writing any field in sstatus is equivalent to reading or writing the homonymous field in mstatus.
 
+> Refer to: fu540-c000-manual-v1p4.pdf P59  
+> 
+> 8.4.2 Supervisor Status Register (sstatus)
+Similar to machine mode, supervisor mode has a register dedicated to keeping track of the hart’s current state called sstatus. sstatus is effectively a restricted view of mstatus, described in Section 8.3.1, in that changes made to sstatus are reflected in mstatus and viceversa, with the exception of the machine mode fields, which are not visible in sstatus.
+
 实验测试：  
 ```
 [firmware_main] Clear MSTATUS_MIE | MSTATUS_SIE for mstatus
