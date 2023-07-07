@@ -18,7 +18,7 @@ void mtrap_handler()
     // notify S-mode that M-mode timer timeout
     csrs_mip(MIE_STIE);
     csrs_mie(MIE_STIE);
-    set_timeout(1000000);
+    set_timeout(10000000);
     break;
   }
 

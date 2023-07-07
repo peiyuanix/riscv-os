@@ -15,20 +15,11 @@ Write a bare metal firmware for QEMU `virt` device, which just prints `Hello, RI
 - [03: Bare Metal Hello RISC-V](/03-Bare-Metal-Hello-RISC-V)  
 - [04: Bare Metal Hello RISC-V (C Language Version)](/04-Bare-Metal-C-Language)
 
-**Switch to `sifive_u`, because `virt` is not well documented!**
+**~~Switch to `sifive_u`, because `virt` is not well documented!~~**
 
-- [04.1: Bare Metal Hello Sifive_u](/04.1-Bare-Metal-Sifive_u)
+- ~~[04.1: Bare Metal Hello Sifive_u](/04.1-Bare-Metal-Sifive_u)~~
 
-~~After some attempts, I found that I had to revert back to `virt` because `sifive_u` doesn't support supervisor mode, which means it doesn't support virtual memory.~~  
-
-**BACK to `sifive_u`**, it has two cores:  
-- hart0 supports only M-mode and U-mode. 
-- hart1 supports S-mode!!!
-
-**Debug Multi-cluster Machine**  
-
-For multi-cluster machines, unfortunately gdb does not by default handle multiple inferiors, and so you have to explicitly connect to them. 
-Refer to [QEMU Debugging multicore machines](https://qemu.readthedocs.io/en/latest/system/gdb.html#debugging-multicore-machines)
+After some attempts, I found that I had to revert back to `virt` because `sifive_u` doesn't support mmio and PCI-E.  
 
 ## Part 3. Interrupts and Process Scheduling
 

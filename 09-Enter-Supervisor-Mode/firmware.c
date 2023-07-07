@@ -70,20 +70,20 @@ void __attribute__((naked)) infi()
 
 void firmware_main()
 {
+  // initialize UART
+  uart_init();
+  
   // print initial status
   uart_printf("[firmware_main] mstatus: 0x%x\n", csrr_mstatus());
   uart_printf("[firmware_main] mie: 0x%x\n", csrr_mie());
   uart_printf("[firmware_main] mip: 0x%x\n", csrr_mip());
-  uart_printf("[firmware_main] mtimecmp_1: %ld\n", mtimecmp_1());
-
-  // initialize UART
-  uart_init();
+  uart_printf("[firmware_main] mtimecmp_0: %ld\n", mtimecmp_0());
 
   // prepare processes
   proc_init();
 
   // setup timer timout
-  set_timeout(1000000);
+  set_timeout(10000000);
 
   // setup S-mode trap vector
   csrw_stvec((u64)strap_entry);

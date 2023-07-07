@@ -69,7 +69,7 @@ void firmware_main()
   proc_init();
 
   // setup timer timout
-  uart_printf("[firmware_main] default MTIMECMP_1 is %d\n", mtimecmp_1());
+  uart_printf("[firmware_main] default MTIMECMP_0 is %d\n", mtimecmp_0());
   set_timeout(10000000);
 
   // setup M-mode trap vector
