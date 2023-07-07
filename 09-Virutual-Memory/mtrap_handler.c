@@ -46,7 +46,7 @@ void mtrap_handler()
         }
       }
     }
-    set_timeout(10000000);
+    set_timeout(0xffffffff);
     break;
   }
 

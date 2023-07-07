@@ -65,6 +65,7 @@ void strap_handler()
   default:
   {
     uart_printf("[STrap - Default] active_pid: %d, mcause: 0x%lX, current ticks: %d\n", active_pid, scause, 0);
+    while (1);
     break;
   }
   }

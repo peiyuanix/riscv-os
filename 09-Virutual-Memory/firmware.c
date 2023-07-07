@@ -77,26 +77,64 @@ void firmware_main()
   proc_init();
 
   // setup timer timout
-  uart_printf("[firmware_main] default MTIMECMP_0 is %d\n", mtimecmp_0());
+  uart_printf("[firmware_main] default MTIMECMP_1 is %d\n", mtimecmp_1());
   set_timeout(10000000);
 
-  // setup S-mode trap vector
+  // // setup S-mode trap vector
   csrw_stvec((u64)strap_entry);
-  // enable S-mode timer interrupt
-  csrw_sie(MIE_STIE);
-  // enable SIE in sstatus
-  csrs_sstatus(MSTATUS_SIE);
+  // // enable SIE in sstatus
+  // csrs_sstatus(MSTATUS_SIE);
+
+  // csrc_mstatus(MSTATUS_MIE | MSTATUS_SIE);
+  // uart_printf("[firmware_main] mstatus is 0x%x\n", csrr_mstatus());
 
   // setup M-mode trap vector
   csrw_mtvec((u64)mtrap_entry);
   // enable M-mode timer interrupt
-  csrw_mie(MIE_MTIE | MIE_STIE);
+  csrw_mie(MIE_MTIE);
   // delegate interrupts
-  csrw_mideleg(MIE_MTIE | MIE_STIE);
+  // csrw_mideleg(MIE_MTIE | MIE_STIE);
   // enable MPIE in mstatus
-  csrs_mstatus(MSTATUS_SPIE | MSTATUS_MPP_S);
+  // csrs_mstatus(MSTATUS_MPP_U);
 
-  csrw_mepc((u64)infi);
+  // csrw_medeleg(MEDELEG_S_ECALL | MEDELEG_U_ECALL);
 
-  asm volatile ("mret");
+  // csrw_mepc((u64)infi);
+
+  uart_printf("[firmware_main] Clear mie\n");
+  csrw_mie(0x0);
+  uart_printf("[firmware_main] mie is 0x%x\n", csrr_mie());
+  uart_printf("[firmware_main] sie is 0x%x\n", csrr_sie());
+  uart_printf("[firmware_main] Set MIE_SEIE | MIE_STIE | MIE_SSIE for mie\n");
+  csrs_mie(MIE_SEIE | MIE_STIE | MIE_SSIE | MIE_MEIE);
+  uart_printf("[firmware_main] mie is 0x%x\n", csrr_mie());
+  uart_printf("[firmware_main] sie is 0x%x\n", csrr_sie());
+  uart_printf("[firmware_main] mideleg is 0x%x\n", csrr_mideleg());
+  // uart_printf("[firmware_main] Set MIE_SEIE | MIE_STIE | MIE_SSIE for mideleg\n");
+  // csrs_mideleg(MIE_SEIE | MIE_STIE);
+  // uart_printf("[firmware_main] mie is 0x%x\n", csrr_mie());
+  // uart_printf("[firmware_main] sie is 0x%x\n", csrr_sie());
+  // uart_printf("[firmware_main] Set MIE_SSIE for mideleg\n");
+  // csrs_mideleg(MIE_SSIE);
+  // uart_printf("[firmware_main] mie is 0x%x\n", csrr_mie());
+  // uart_printf("[firmware_main] sie is 0x%x\n", csrr_sie());
+
+  uart_printf("[firmware_main] Set MIE_SSIE for sie\n");
+  csrs_sie(MIE_MEIE | MIE_MSIE | MIE_MTIE);
+  uart_printf("[firmware_main] mie is 0x%x\n", csrr_mie());
+  uart_printf("[firmware_main] sie is 0x%x\n", csrr_sie());
+
+  // uart_printf("[firmware_main] Clear MSTATUS_MIE | MSTATUS_SIE for mstatus\n");
+  // csrc_mstatus(MSTATUS_MIE | MSTATUS_SIE);
+  // uart_printf("[firmware_main] mstatus is 0x%x\n", csrr_mstatus());
+  // uart_printf("[firmware_main] sstatus is 0x%x\n", csrr_sstatus());
+  // uart_printf("[firmware_main] Set SSTATUS_SIE for sstatus\n");
+  // csrs_sstatus(SSTATUS_SIE);
+  // uart_printf("[firmware_main] mstatus is 0x%x\n", csrr_mstatus());
+  // uart_printf("[firmware_main] sstatus is 0x%x\n", csrr_sstatus());
+
+  while (1)
+    ;
+
+  asm volatile("mret");
 }

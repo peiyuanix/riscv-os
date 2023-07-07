@@ -28,6 +28,7 @@ void test_proc_1_entry()
     {
     }
     uart_printf("[PID = %d] Hello, Process Shceduler!\n", 1);
+    asm volatile ("ecall");
   }
 }
 

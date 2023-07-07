@@ -28,7 +28,7 @@ Similar to machine mode, supervisor mode has a register dedicated to keeping tra
 [firmware_main] sstatus is 0x2
 ```
 
-### `sie/sip` 是 `mie/mip` 的视图！！！
+### `sie/sip` 是 `mie/mip` 的视图，且在 `mideleg` 启用的位才对 `sie/sip` 可见！
 > Restricted views of the mip and mie registers appear as the sip and sie registers for supervisor level. If an interrupt is delegated to S-mode by setting a bit in the mideleg register, it becomes visible in the sip register and is maskable using the sie register. Otherwise, the corresponding bits in sip and sie are read-only zero.
 
 > Volume II: RISC-V Privileged Architectures V20211203 P68  

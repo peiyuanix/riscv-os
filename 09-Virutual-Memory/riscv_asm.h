@@ -27,9 +27,32 @@ static inline void csrw_stvec(const volatile u64 val)
                : "r"(val));
 }
 
+static inline u64 csrr_mie()
+{
+  volatile u64 val;
+  asm volatile("csrr %0, mie"
+               : "=r"(val)
+               :);
+  return val;
+}
+
 static inline void csrw_mie(const volatile u64 val)
 {
   asm volatile("csrw mie, %0"
+               :
+               : "r"(val));
+}
+
+static inline void csrs_mie(const volatile u64 val)
+{
+  asm volatile("csrs mie, %0"
+               :
+               : "r"(val));
+}
+
+static inline void csrc_mie(const volatile u64 val)
+{
+  asm volatile("csrc mie, %0"
                :
                : "r"(val));
 }
@@ -50,9 +73,46 @@ static inline void csrw_sie(const volatile u64 val)
                : "r"(val));
 }
 
+static inline void csrs_sie(const volatile u64 val)
+{
+  asm volatile("csrs sie, %0"
+               :
+               : "r"(val));
+}
+
+static inline void csrc_sie(const volatile u64 val)
+{
+  asm volatile("csrc sie, %0"
+               :
+               : "r"(val));
+}
+
+static inline u64 csrr_mideleg()
+{
+  volatile u64 val;
+  asm volatile("csrr %0, mideleg"
+               : "=r"(val)
+               :);
+  return val;
+}
+
 static inline void csrw_mideleg(const volatile u64 val)
 {
   asm volatile("csrw mideleg, %0"
+               :
+               : "r"(val));
+}
+
+static inline void csrs_mideleg(const volatile u64 val)
+{
+  asm volatile("csrs mideleg, %0"
+               :
+               : "r"(val));
+}
+
+static inline void csrc_mideleg(const volatile u64 val)
+{
+  asm volatile("csrc mideleg, %0"
                :
                : "r"(val));
 }
