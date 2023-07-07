@@ -13,7 +13,7 @@ void strap_handler()
   u64 scause = csrr_scause();
   switch (scause)
   {
-  case MCAUSE_INTR_M_TIMER:
+  case MCAUSE_INTR_S_TIMER:
   {
     // there exists runnable processes
     if (proc_list[0].state != PROC_STATE_NONE)
@@ -46,17 +46,17 @@ void strap_handler()
         }
       }
     }
-    set_timeout(10000000);
+    csrc_sie(SIE_STIE);
     break;
   }
 
-  case MCAUSE_INTR_M_EXTER:
+  case MCAUSE_INTR_S_EXTER:
   {
     uart_printf("[STrap - Exter] active_pid: %d, mcause: 0x%lX, current ticks: %d\n", active_pid, scause, 0);
     break;
   }
 
-  case MCAUSE_INNER_M_ILLEAGEL_INSTRUCTION:
+  case MCAUSE_INNER_ILLEAGEL_INSTRUCTION:
   {
     uart_printf("[STrap - Illeagel Instruction] active_pid: %d, mcause: 0x%lX, mepc: %lx\n", active_pid, scause, csrr_mepc());
     break;
@@ -65,7 +65,8 @@ void strap_handler()
   default:
   {
     uart_printf("[STrap - Default] active_pid: %d, mcause: 0x%lX, current ticks: %d\n", active_pid, scause, 0);
-    while (1);
+    while (1)
+      ;
     break;
   }
   }

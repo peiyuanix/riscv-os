@@ -96,3 +96,13 @@ interrupts through external interrupts (MEI) instead, then mip.MSIP and mie.MSIE
 
 ### Higher-privilege-level code can disable selected higher-privilege-mode before ceding control to a lower-privilege mode  
 > When a hart is executing in privilege mode x, interrupts are globally enabled when xIE=1 and globally disabled when xIE=0. Interrupts for lower-privilege modes, w<x, are always globally disabled regardless of the setting of any global wIE bit for the lower-privilege mode. Interrupts for higher-privilege modes, y>x, are always globally enabled regardless of the setting of the global yIE bit for the higher-privilege mode. Higher-privilege-level code can use separate per-interrupt enable bits to disable selected higher-privilege-mode interrupts before ceding control to a lower-privilege mode.  
+
+### 如何把时钟中断信息传递给 S 模式？
+
+理想情况是
+- 当 M 模式时钟中断发生时，在 M 模式中断处理程序中设置 mip.STIP，然后 mret
+- 之后会触发 S 模式中断处理程序，S 模式会看到 sip.STIP，并处理时钟中断，处理完毕之后清楚 sip.STIP
+
+遇到的问题是，S 模式中断处理程序没法清除 sip.SITP ？？？可能是实现错误？？？
+
+解决方案：M 模式中断处理程序 设置 mip.STIP 和 mie.STIE；S 模式中断处理程序处理完毕之后清楚 sie.STIE 以达到间接关闭 STIE 的目的  

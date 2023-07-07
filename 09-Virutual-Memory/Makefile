@@ -6,9 +6,9 @@ OBJCOPY := ${CROSS_COMPILE}objcopy
 
 ASM_SRC := firmware_entry.s mtrap_entry.s strap_entry.s
 CLANG_SRC := firmware.c mtrap_handler.c strap_handler.c proc.c kstring.c test_processes.c kernel_stack.c
+GEN_HEADERS := riscv_asm_csr.gen.h
 HEADERS := riscv_arch.h riscv_asm.h uart.h timer.h riscv_priv.h \
-					proc.h kstring.h riscv_cpu.h
-
+					proc.h kstring.h riscv_cpu.h ${GEN_HEADERS}
 OBJECTS = $(addprefix bin/,$(ASM_SRC:.s=.asmo))
 OBJECTS += $(addprefix bin/,$(CLANG_SRC:.c=.clango))
 
@@ -23,6 +23,9 @@ bin/%.asmo: %.s
 
 bin/%.clango: %.c ${HEADERS}
 	${CC} -ffreestanding -c -O0 -g $< -o $@
+
+%.gen.h: %.gen.h.py
+	python3 $< > $@
 
 run: bin/firmware.bin
 	qemu-system-riscv64 -machine sifive_u -smp 2 -m 2G -serial stdio -bios bin/firmware.bin -s -display none

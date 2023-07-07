@@ -13,5 +13,9 @@
     "uart.h": "c",
     "interrupts.h": "c",
     "kbool.h": "c"
-  }
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none"
 }
